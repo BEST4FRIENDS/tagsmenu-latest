@@ -1,0 +1,35 @@
+#
+# |--------------------------------------------------------------------------
+# | Laravel HTTP
+# |--------------------------------------------------------------------------
+# |
+# | This file is the primary entry point for all incoming requests into
+# | the Laravel application. It is responsible for configuring the web
+# | server and directing all requests to the application's front
+# | controller, which will then handle the request and return the
+# | appropriate response.
+# |
+# | Feel free to modify this file as needed, but be careful not to break
+# | anything! This is a good place to add any custom server rules.
+# |
+<IfModule mod_rewrite.c>
+    <IfModule mod_negotiation.c>
+        Options -MultiViews -Indexes
+    </IfModule>
+
+    RewriteEngine On
+
+    # Handle Authorization Header
+    RewriteCond %{HTTP:Authorization} .
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+    # Redirect Trailing Slashes If Not A Folder...
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_URI} (.+)/$
+    RewriteRule ^ %1 [L,R=301]
+
+    # Send Requests To Front Controller...
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^ index.php [L]
+</IfModule>

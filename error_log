@@ -1,0 +1,15 @@
+[11-Sep-2025 16:46:04 UTC] PHP Warning:  require(/home/tagsmenu/public_html/vendor/autoload.php): Failed to open stream: No such file or directory in /home/tagsmenu/public_html/artisan on line 10
+[11-Sep-2025 16:46:04 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/tagsmenu/public_html/vendor/autoload.php' (include_path='.:/opt/cpanel/ea-php82/root/usr/share/pear') in /home/tagsmenu/public_html/artisan:10
+Stack trace:
+#0 {main}
+  thrown in /home/tagsmenu/public_html/artisan on line 10
+[11-Sep-2025 16:46:18 UTC] PHP Warning:  require(/home/tagsmenu/public_html/vendor/autoload.php): Failed to open stream: No such file or directory in /home/tagsmenu/public_html/artisan on line 10
+[11-Sep-2025 16:46:18 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/tagsmenu/public_html/vendor/autoload.php' (include_path='.:/opt/cpanel/ea-php82/root/usr/share/pear') in /home/tagsmenu/public_html/artisan:10
+Stack trace:
+#0 {main}
+  thrown in /home/tagsmenu/public_html/artisan on line 10
+[11-Sep-2025 16:46:39 UTC] PHP Warning:  require(/home/tagsmenu/public_html/vendor/autoload.php): Failed to open stream: No such file or directory in /home/tagsmenu/public_html/artisan on line 10
+[11-Sep-2025 16:46:39 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/tagsmenu/public_html/vendor/autoload.php' (include_path='.:/opt/cpanel/ea-php82/root/usr/share/pear') in /home/tagsmenu/public_html/artisan:10
+Stack trace:
+#0 {main}
+  thrown in /home/tagsmenu/public_html/artisan on line 10

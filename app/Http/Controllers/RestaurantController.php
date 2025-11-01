@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models-Restaurant;
-use Illuminate-Http-Request;
-use Illuminate-Http-RedirectResponse;
-use Illuminate-View-View;
+// KORRIGIERT: Backslashes anstatt Bindestriche
+use App\Models\Restaurant;
+use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class RestaurantController extends Controller
 {
@@ -14,10 +17,11 @@ class RestaurantController extends Controller
      */
     public function create(): View|RedirectResponse
     {
-        // Zeigt das Formular nur an, wenn der Benutzer noch kein Restaurant hat.
-        if (auth()->user()->restaurant) {
-            return redirect()->route('dashboard');
+        // Redirects to dashboard if a restaurant already exists
+        if (Auth::user()->restaurant) {
+            return redirect()->route('dashboard')->with('info', 'Du hast bereits ein Restaurant erstellt.');
         }
+
         return view('restaurant.create');
     }
 
@@ -27,18 +31,19 @@ class RestaurantController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'subdomain' => 'required|string|lowercase|alpha_dash|max:50|unique:restaurants,subdomain',
+            'name' => 'required|string|max:255|unique:restaurants,name',
+            // Add other restaurant fields here if you have them, e.g., 'address', 'phone', etc.
         ]);
 
-        $request->user()->restaurant()->create([
-            'name' => $validated['name'],
-            'subdomain' => $validated['subdomain'],
-            'status' => 'active', // Standardmäßig auf aktiv setzen
-        ]);
+        // Automatically generate a subdomain from the restaurant name
+        $validated['subdomain'] = Str::slug($validated['name']);
+        
+        // Add the user_id to the validated data
+        $validated['user_id'] = Auth::id();
 
-        // KORREKTUR: Die Erfolgsmeldung wird jetzt an die Session "geflasht".
-        return redirect()->route('plans.index')
-                         ->with('success', "Ihr Restaurant '{$validated['name']}' wurde erfolgreich erstellt! Wählen Sie jetzt den passenden Plan, um loszulegen.");
+        // Create the restaurant
+        $restaurant = Restaurant::create($validated);
+
+        return redirect()->route('dashboard')->with('success', 'Dein Restaurant wurde erfolgreich erstellt!');
     }
 }

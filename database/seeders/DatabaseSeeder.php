@@ -14,6 +14,7 @@ class DatabaseSeeder extends Seeder
         // Ruft unseren neuen Seeder auf
         $this->call([
             SuperAdminSeeder::class,
+            PortalCategorySeeder::class,
         ]);
     }
 }

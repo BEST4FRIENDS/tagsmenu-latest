@@ -3,94 +3,114 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Restaurant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class CategoryController extends Controller
 {
-    // HILFSFUNKTION, UM WIEDERHOLUNG ZU VERMEIDEN
-    private function checkRestaurant()
+    use AuthorizesRequests;
+
+    private function getRestaurantOrFail(): Restaurant|RedirectResponse
     {
         $restaurant = Auth::user()->restaurant;
-        if (! $restaurant) {
-            // Leitet den Benutzer zu den Einstellungen, um ein Restaurant zu erstellen/zuzuweisen.
-            // Wir fügen eine Fehlermeldung hinzu, um zu erklären, warum.
-            return redirect()->route('settings.index')->with('error', 'Sie müssen zuerst ein Restaurant in den Einstellungen anlegen oder sich einem zuweisen.');
+        if (!$restaurant) {
+            return redirect()->route('settings.index')->with('error', 'Sie müssen zuerst ein Restaurant anlegen.');
         }
         return $restaurant;
     }
 
-    public function index()
+    public function index(Request $request): View|RedirectResponse
     {
-        if (($redirect = $this->checkRestaurant()) instanceof \Illuminate\Http\RedirectResponse) {
-            return $redirect;
-        }
-        $restaurant = $this->checkRestaurant();
-        
-        $categories = $restaurant->categories()->with('translations')->get();
-        return view('categories.index', ['categories' => $categories]);
+        $restaurant = $this->getRestaurantOrFail();
+        if ($restaurant instanceof RedirectResponse) return $restaurant;
+
+        $type = $request->query('type', 'food');
+
+        $categories = $restaurant->categories()
+            ->where('type', $type)
+            ->with('translations')
+            ->get();
+
+        return view('categories.index', [
+            'categories' => $categories,
+            'type' => $type
+        ]);
     }
 
-    public function create()
+    public function create(Request $request): View
     {
-        return view('categories.create');
+        $type = $request->query('type', 'food');
+        return view('categories.create', ['type' => $type]);
     }
 
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
+        $restaurant = $this->getRestaurantOrFail();
+        if ($restaurant instanceof RedirectResponse) return $restaurant;
+
         $validated = $request->validate([
             'name_de' => 'required|string|max:255',
-            // ... (andere Sprachvalidierungen)
+            'name_en' => 'nullable|string|max:255',
+            'name_hu' => 'nullable|string|max:255',
+            'name_sk' => 'nullable|string|max:255',
+            'type'    => 'required|in:food,drink',
         ]);
 
-        if (($redirect = $this->checkRestaurant()) instanceof \Illuminate\Http\RedirectResponse) {
-            return $redirect;
-        }
-        $restaurant = $this->checkRestaurant();
+        $category = $restaurant->categories()->create([
+            'type' => $validated['type'],
+        ]);
 
-        $category = $restaurant->categories()->create([]);
         $this->updateTranslations($category, $validated);
 
-        return redirect()->route('categories.index')->with('success', 'Kategorie erfolgreich erstellt!');
+        return redirect()->route('categories.index', ['type' => $category->type])->with('success', 'Kategorie erfolgreich erstellt!');
     }
 
-    public function edit(Category $category)
+    public function edit(Category $category): View
     {
-        if ($category->restaurant_id !== Auth::user()->restaurant->id) {
-            abort(403);
-        }
+        $this->authorize('update', $category);
+
         return view('categories.edit', ['category' => $category]);
     }
 
-    public function update(Request $request, Category $category)
+    public function update(Request $request, Category $category): RedirectResponse
     {
-        if ($category->restaurant_id !== Auth::user()->restaurant->id) {
-            abort(403);
-        }
+        $this->authorize('update', $category);
         
         $validated = $request->validate([
             'name_de' => 'required|string|max:255',
-             // ... (andere Sprachvalidierungen)
+            'name_en' => 'nullable|string|max:255',
+            'name_hu' => 'nullable|string|max:255',
+            'name_sk' => 'nullable|string|max:255',
+            'type'    => 'required|in:food,drink',
+        ]);
+
+        $category->update([
+            'type' => $validated['type'],
         ]);
 
         $this->updateTranslations($category, $validated);
 
-        return redirect()->route('categories.index')->with('success', 'Kategorie erfolgreich aktualisiert!');
+        return redirect()->route('categories.index', ['type' => $category->type])->with('success', 'Kategorie erfolgreich aktualisiert!');
     }
 
-    public function destroy(Category $category)
+    public function destroy(Category $category): RedirectResponse
     {
-        if ($category->restaurant_id !== Auth::user()->restaurant->id) {
-            abort(403);
-        }
+        $this->authorize('delete', $category);
+
+        $type = $category->type;
         $category->delete();
-        return redirect()->route('categories.index')->with('success', 'Kategorie erfolgreich gelöscht!');
+        
+        return redirect()->route('categories.index', ['type' => $type])->with('success', 'Kategorie erfolgreich gelöscht!');
     }
 
-    private function updateTranslations(Category $category, array $data)
+    private function updateTranslations(Category $category, array $data): void
     {
         $translations = [
-            'de' => ['name' => $data['name_de']],
+            'de' => ['name' => $data['name_de'] ?? null],
             'en' => ['name' => $data['name_en'] ?? null],
             'hu' => ['name' => $data['name_hu'] ?? null],
             'sk' => ['name' => $data['name_sk'] ?? null],
@@ -100,7 +120,7 @@ class CategoryController extends Controller
             if (!empty($transData['name'])) {
                 $category->translations()->updateOrCreate(
                     ['locale' => $locale],
-                    ['name' => $transData['name']]
+                    $transData
                 );
             }
         }

@@ -1,3 +1,13 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Hilfsklassen für die dynamische Akzentfarbe (wird in menu.blade.php definiert) */
+.bg-accent { background-color: var(--accent-color); }
+.text-accent { color: var(--accent-color); }
+.border-accent { border-color: var(--accent-color); }
+.hover\:text-accent:hover { color: var(--accent-color); }
+.hover\:bg-accent:hover { background-color: var(--accent-color); }
+
+/* Stellt sicher, dass Alpine Cloak funktioniert */
+[x-cloak] { display: none !important; }

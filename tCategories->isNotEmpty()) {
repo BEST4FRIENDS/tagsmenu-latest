@@ -1,0 +1,111 @@
+[90m= [39m[34;4mIlluminate\Database\Eloquent\Collection[39;24m {#953
+    [34mall[39m: [
+      [34;4mApp\Models\PortalCategory[39;24m {#6534
+        [34mid[39m: [35m1[39m,
+        [34mname[39m: "[32m{"de":"Italienisch","en":"Italian","hu":"Olasz","sk":"Talianska"}[39m",
+        [34mslug[39m: "[32mitalienisch[39m",
+        [34mdescription[39m: [36mnull[39m,
+        [34mcreated_at[39m: "[32m2025-10-17 14:47:18[39m",
+        [34mupdated_at[39m: "[32m2025-10-22 14:30:22[39m",
+      },
+      [34;4mApp\Models\PortalCategory[39;24m {#6535
+        [34mid[39m: [35m3[39m,
+        [34mname[39m: "[32m{"de":"Vegan","en":"Vegan","hu":"Vegán","sk":"Vegánska"}[39m",
+        [34mslug[39m: "[32mvegan[39m",
+        [34mdescription[39m: [36mnull[39m,
+        [34mcreated_at[39m: "[32m2025-10-17 14:47:18[39m",
+        [34mupdated_at[39m: "[32m2025-10-22 14:30:53[39m",
+      },
+      [34;4mApp\Models\PortalCategory[39;24m {#6536
+        [34mid[39m: [35m4[39m,
+        [34mname[39m: "[32m{"de":"Burger","en":"Burger","hu":"Burger","sk":"Burger"}[39m",
+        [34mslug[39m: "[32mburger[39m",
+        [34mdescription[39m: [36mnull[39m,
+        [34mcreated_at[39m: "[32m2025-10-17 14:47:18[39m",
+        [34mupdated_at[39m: "[32m2025-10-22 14:23:54[39m",
+      },
+      [34;4mApp\Models\PortalCategory[39;24m {#6537
+        [34mid[39m: [35m5[39m,
+        [34mname[39m: "[32m{"de":"Sushi","en":"Sushi","hu":"Sushi","sk":"Sushi"}[39m",
+        [34mslug[39m: "[32msushi[39m",
+        [34mdescription[39m: [36mnull[39m,
+        [34mcreated_at[39m: "[32m2025-10-17 14:47:18[39m",
+        [34mupdated_at[39m: "[32m2025-10-22 14:30:22[39m",
+      },
+    ],
+  }
+
+[90m= [39m[34;4mIlluminate\Database\Eloquent\Collection[39;24m {#953
+    [34mall[39m: [
+      [34;4mApp\Models\PortalCategory[39;24m {#6534
+        [34mid[39m: [35m1[39m,
+        [34mname[39m: "[32m{"de":"Italienisch","en":"Italian","hu":"Olasz","sk":"Talianska"}[39m",
+        [34mslug[39m: "[32mitalienisch[39m",
+        [34mdescription[39m: [36mnull[39m,
+        [34mcreated_at[39m: "[32m2025-10-17 14:47:18[39m",
+        [34mupdated_at[39m: "[32m2025-10-22 14:30:22[39m",
+      },
+      [34;4mApp\Models\PortalCategory[39;24m {#6535
+        [34mid[39m: [35m3[39m,
+        [34mname[39m: "[32m{"de":"Vegan","en":"Vegan","hu":"Vegán","sk":"Vegánska"}[39m",
+        [34mslug[39m: "[32mvegan[39m",
+        [34mdescription[39m: [36mnull[39m,
+        [34mcreated_at[39m: "[32m2025-10-17 14:47:18[39m",
+        [34mupdated_at[39m: "[32m2025-10-22 14:30:53[39m",
+      },
+      [34;4mApp\Models\PortalCategory[39;24m {#6536
+        [34mid[39m: [35m4[39m,
+        [34mname[39m: "[32m{"de":"Burger","en":"Burger","hu":"Burger","sk":"Burger"}[39m",
+        [34mslug[39m: "[32mburger[39m",
+        [34mdescription[39m: [36mnull[39m,
+        [34mcreated_at[39m: "[32m2025-10-17 14:47:18[39m",
+        [34mupdated_at[39m: "[32m2025-10-22 14:23:54[39m",
+      },
+      [34;4mApp\Models\PortalCategory[39;24m {#6537
+        [34mid[39m: [35m5[39m,
+        [34mname[39m: "[32m{"de":"Sushi","en":"Sushi","hu":"Sushi","sk":"Sushi"}[39m",
+        [34mslug[39m: "[32msushi[39m",
+        [34mdescription[39m: [36mnull[39m,
+        [34mcreated_at[39m: "[32m2025-10-17 14:47:18[39m",
+        [34mupdated_at[39m: "[32m2025-10-22 14:30:22[39m",
+      },
+    ],
+  }
+
+[90m= [39m[34;4mIlluminate\Database\Eloquent\Collection[39;24m {#953
+    [34mall[39m: [
+      [34;4mApp\Models\PortalCategory[39;24m {#6947
+        [34mid[39m: [35m1[39m,
+        [34mname[39m: "[32m{"de":"Italienisch","en":"Italian","hu":"Olasz","sk":"Talianska"}[39m",
+        [34mslug[39m: "[32mitalienisch[39m",
+        [34mdescription[39m: [36mnull[39m,
+        [34mcreated_at[39m: "[32m2025-10-17 14:47:18[39m",
+        [34mupdated_at[39m: "[32m2025-10-22 14:30:22[39m",
+      },
+      [34;4mApp\Models\PortalCategory[39;24m {#6946
+        [34mid[39m: [35m3[39m,
+        [34mname[39m: "[32m{"de":"Vegan","en":"Vegan","hu":"Vegán","sk":"Vegánska"}[39m",
+        [34mslug[39m: "[32mvegan[39m",
+        [34mdescription[39m: [36mnull[39m,
+        [34mcreated_at[39m: "[32m2025-10-17 14:47:18[39m",
+        [34mupdated_at[39m: "[32m2025-10-22 14:30:53[39m",
+      },
+      [34;4mApp\Models\PortalCategory[39;24m {#6945
+        [34mid[39m: [35m4[39m,
+        [34mname[39m: "[32m{"de":"Burger","en":"Burger","hu":"Burger","sk":"Burger"}[39m",
+        [34mslug[39m: "[32mburger[39m",
+        [34mdescription[39m: [36mnull[39m,
+        [34mcreated_at[39m: "[32m2025-10-17 14:47:18[39m",
+        [34mupdated_at[39m: "[32m2025-10-22 14:23:54[39m",
+      },
+      [34;4mApp\Models\PortalCategory[39;24m {#6944
+        [34mid[39m: [35m5[39m,
+        [34mname[39m: "[32m{"de":"Sushi","en":"Sushi","hu":"Sushi","sk":"Sushi"}[39m",
+        [34mslug[39m: "[32msushi[39m",
+        [34mdescription[39m: [36mnull[39m,
+        [34mcreated_at[39m: "[32m2025-10-17 14:47:18[39m",
+        [34mupdated_at[39m: "[32m2025-10-22 14:30:22[39m",
+      },
+    ],
+  }
+

@@ -11,9 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('restaurants', function (Blueprint $table) {
-            // Fügt die neue Spalte 'status' hinzu, standardmäßig 'aktiv'
-            $table->string('status')->default('active')->after('logo_url');
+        Schema::create('taggables', function (Blueprint $table) {
+            $table->foreignId('hashtag_id')->constrained()->onDelete('cascade');
+            $table->morphs('taggable');
+            $table->primary(['hashtag_id', 'taggable_id', 'taggable_type']);
         });
     }
 
@@ -22,8 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('restaurants', function (Blueprint $table) {
-            $table->dropColumn('status');
-        });
+        Schema::dropIfExists('taggables');
     }
 };

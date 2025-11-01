@@ -1,81 +1,53 @@
 @extends('layouts.admin')
 
-@section('title', 'Dashboard')
+@section('title', __('dashboard.title'))
 
 @section('content')
-    <div x-data="{ isQrModalOpen: false }">
-        <h2 class="text-2xl font-bold text-white mb-6">Willkommen zurück!</h2>
+    <h2 class="text-2xl font-bold text-white mb-6">{{ __('dashboard.welcome_back') }}</h2>
+    
+    @php
+        $restaurant = auth()->user()->restaurant;
+    @endphp
 
-        @if (session('success'))
-            <div class="mb-6 bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded-lg" role="alert">
-                <p class="font-bold">Erfolg!</p>
-                <p>{{ session('success') }}</p>
-            </div>
-        @endif
-
-        @if (session('error'))
-            <div class="mb-6 bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-lg" role="alert">
-                <p class="font-bold">Fehler</p>
-                <p>{{ session('error') }}</p>
-            </div>
-        @endif
-
+    @if($restaurant)
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
             
             <livewire:quick-actions />
 
+            {{-- QR Code Bereich --}}
             <div class="bg-gray-800 p-6 rounded-lg flex flex-col items-center justify-center">
-                 <h3 class="font-semibold text-lg mb-4 text-blue-400">Ihr QR-Code</h3>
+                 <h3 class="font-semibold text-lg mb-4 text-blue-400">{{ __('dashboard.qr_code_title') }}</h3>
                  
-                 @if ($restaurant && $restaurant->subdomain)
-                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://{{ $restaurant->subdomain }}.tagsmenu.app" alt="QR Code" class="rounded-md">
+                 @if($restaurant->subdomain)
+                    @php
+                        try {
+                            $menuUrl = route('public.menu.show', ['subdomain' => $restaurant->subdomain]);
+                        } catch (\Exception $e) {
+                            $menuUrl = "http://{$restaurant->subdomain}.tagsmenu.app"; // Fallback
+                        }
+                        $qrApiUrl = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" . urlencode($menuUrl);
+                        $qrDownloadUrl = "https://api.qrserver.com/v1/create-qr-code/?size=1000x1000&data=" . urlencode($menuUrl);
+                    @endphp
+
+                    <img src="{{ $qrApiUrl }}" alt="QR Code für {{ $restaurant->name }}" class="rounded-md shadow-lg bg-white p-1">
                     
-                    <!-- Container für die Buttons -->
-                    <div class="mt-4 flex space-x-3">
-                        <button @click="isQrModalOpen = true" class="px-4 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700">
-                            <span>Vergrößern</span>
-                        </button>
-                        
-                        <!-- NEU: Download-Button -->
-                        <a href="{{ route('qr_code.download') }}" class="px-4 py-2 bg-green-600 text-white text-sm rounded-md hover:bg-green-700">
-                            <span>Herunterladen</span>
-                        </a>
-                    </div>
+                    <a href="{{ $qrDownloadUrl }}" download="qr-code-{{ $restaurant->subdomain }}.png" class="mt-4 px-4 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700">
+                        <span>{{ __('dashboard.download_hq') }}</span>
+                    </a>
                  @else
-                    <p class="text-gray-400 text-sm text-center">Bitte legen Sie in den Einstellungen eine Subdomain fest, um Ihren QR-Code zu sehen.</p>
+                    <p class="text-gray-500 text-sm">{{ __('dashboard.subdomain_not_set') }}</p>
                  @endif
             </div>
-
-        </div>
-
-        {{-- QR-Code Modal --}}
-        @if ($restaurant && $restaurant->subdomain)
-            <div x-show="isQrModalOpen" 
-                 x-transition:enter="ease-out duration-300"
-                 x-transition:enter-start="opacity-0"
-                 x-transition:enter-end="opacity-100"
-                 x-transition:leave="ease-in duration-200"
-                 x-transition:leave-start="opacity-100"
-                 x-transition:leave-end="opacity-0"
-                 class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75" 
-                 x-cloak>
-                
-                <div @click.away="isQrModalOpen = false" class="bg-white p-8 rounded-lg text-center">
-                    <h3 class="font-bold text-lg text-gray-800 mb-4">{{ $restaurant->name }}</h3>
-                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://{{ $restaurant->subdomain }}.tagsmenu.app" alt="QR Code Groß" class="rounded-md">
-                    
-                    <!-- Container für die Buttons im Modal -->
-                    <div class="mt-6 flex justify-center space-x-4">
-                        <button @click="isQrModalOpen = false" class="px-4 py-2 bg-gray-600 text-white text-sm rounded-md hover:bg-gray-500">
-                            Schließen
-                        </button>
-                        <!-- NEU: Download-Button im Modal -->
-                        <a href="{{ route('qr_code.download') }}" class="px-4 py-2 bg-green-600 text-white text-sm rounded-md hover:bg-green-700">
-                            Herunterladen (500px)
-                        </a>
-                    </div>
-                </div>
+            
+            {{-- Analytics Widget --}}
+            <div class="bg-gray-800 p-6 rounded-lg">
+                <h3 class="font-semibold text-lg mb-4 text-blue-400">{{ __('dashboard.analytics_title') }}</h3>
+                <p class="text-gray-500">{{ __('dashboard.analytics_text') }}</p>
             </div>
-        @endif
-    </div>
+        </div>
+    @else
+        <div class="bg-yellow-500/20 border-l-4 border-yellow-500 text-yellow-300 p-4 rounded-lg mb-6" role="alert">
+            <p>{{ __('general.no_restaurant_warning') }}</p>
+        </div>
+    @endif
 @endsection

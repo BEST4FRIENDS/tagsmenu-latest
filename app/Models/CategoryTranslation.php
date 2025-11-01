@@ -4,25 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class CategoryTranslation extends Model
 {
     use HasFactory;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
-    protected $fillable = [
-        'category_id',
-        'locale', // Diese Zeile wurde hinzugefügt/korrigiert
-        'name',
-    ];
-
-    public function category(): BelongsTo
-    {
-        return $this->belongsTo(Category::class);
-    }
+    // This model does not need its own timestamps.
+    public $timestamps = false;
+    
+    // Define all columns that can be filled with data.
+    protected $fillable = ['category_id', 'locale', 'name'];
 }

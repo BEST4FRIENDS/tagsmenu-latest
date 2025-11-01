@@ -12,12 +12,11 @@ class QuickActions extends Component
     {
         $restaurant = Auth::user()->restaurant;
         
-        // This is the corrected query.
-        // It finds all dishes where the dish's category belongs to the current restaurant.
+        // VERBESSERUNG: Lade 'category' explizit mit, um die Sicherheitsprüfung robuster zu machen.
         $dishes = $restaurant 
             ? Dish::whereHas('category', function ($query) use ($restaurant) {
                 $query->where('restaurant_id', $restaurant->id);
-            })->with('translations')->latest()->get()
+            })->with('category', 'translations')->latest()->get()
             : collect();
 
         return view('livewire.quick-actions', [
@@ -25,13 +24,16 @@ class QuickActions extends Component
         ]);
     }
 
-    // This method is called when a toggle is clicked
     public function toggleAvailability(Dish $dish)
     {
-        // Add a security check to ensure the user can only modify their own dishes
-        if ($dish->category->restaurant_id == Auth::user()->restaurant->id) {
+        // KORREKTUR: Robustere Sicherheitsprüfung
+        $userRestaurantId = Auth::user()->restaurant?->id;
+
+        // Prüfen, ob der Benutzer ein Restaurant hat UND das Gericht (über die geladene Kategorie) zu diesem Restaurant gehört
+        if ($userRestaurantId && $dish->category && $dish->category->restaurant_id == $userRestaurantId) {
             $dish->is_available = !$dish->is_available;
             $dish->save();
         }
+        // Optional: Hier könnte ein Fehler-Event ausgelöst werden, wenn die Berechtigung fehlt.
     }
 }

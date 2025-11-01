@@ -2,6 +2,21 @@
     <form method="POST" action="{{ route('register') }}">
         @csrf
 
+        <!-- HINZUGEFÜGT: Zeigt eine Zusammenfassung aller Fehler an -->
+        @if ($errors->any())
+            <div class="mb-4">
+                <div class="font-medium text-red-500">
+                    {{ __('Ups! Da ist etwas schiefgelaufen.') }}
+                </div>
+
+                <ul class="mt-3 list-disc list-inside text-sm text-red-500">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
         <div>
             <x-input-label for="name" :value="__('Ihr Name')" />
             <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />

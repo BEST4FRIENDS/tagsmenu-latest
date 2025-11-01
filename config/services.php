@@ -1,33 +1,19 @@
 <?php
+// in config/services.php
 
 return [
-
-    /*
-    |--------------------------------------------------------------------------
-    | Third Party Services
-    |--------------------------------------------------------------------------
-    |
-    | This file is for storing the credentials for third party services such
-    | as Mailgun, Postmark, AWS and more. This file provides the de facto
-    | location for this type of information, allowing packages to have
-    | a conventional file to locate the various service credentials.
-    |
-    */
-
+    /* ... (deine anderen Services wie postmark, resend, etc. bleiben unverändert) ... */
     'postmark' => [
         'token' => env('POSTMARK_TOKEN'),
     ],
-
     'resend' => [
         'key' => env('RESEND_KEY'),
     ],
-
     'ses' => [
         'key' => env('AWS_ACCESS_KEY_ID'),
         'secret' => env('AWS_SECRET_ACCESS_KEY'),
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
-
     'slack' => [
         'notifications' => [
             'bot_user_oauth_token' => env('SLACK_BOT_USER_OAUTH_TOKEN'),
@@ -35,22 +21,24 @@ return [
         ],
     ],
 
-    // --- NEU: Stripe-Konfiguration hinzugefügt ---
+    // --- Korrigierte Stripe-Konfiguration ---
     'stripe' => [
-        // Diese Zeilen lesen die Werte aus Ihrer .env-Datei
-        'key' => env('STRIPE_KEY'),
+        'key'    => env('STRIPE_KEY'),
         'secret' => env('STRIPE_SECRET'),
         'webhook' => [
             'secret' => env('STRIPE_WEBHOOK_SECRET'),
         ],
 
-        // Dies ist unsere "Übersetzungs-Tabelle" für die Plan-Namen
+        // NUR die Plan-IDs gehören hierher. Das ist die Konfiguration.
+        // Die Texte (Namen, Preise etc.) gehören in die Sprachdateien.
         'plans' => [
-            // BITTE ERSETZEN SIE DIESE PLATZHALTER MIT IHREN ECHTEN STRIPE PREIS-IDS
-            'price_1S7yu2HZisIzMiCRgFU5d97U' => 'Basis Tarif',
-            'price_1S7yw7HZisIzMiCR2mOAJ2iq' => 'Premium AI - Tarif',
-            'price_1S7z09HZisIzMiCRbrs4i4ql' => 'Concierge-Tarif',
-        ],
+            'basic'     => env('PLAN_BASIC_ID'),
+            'premium'   => env('PLAN_PREMIUM_ID'),
+            'concierge' => env('PLAN_CONCIERGE_ID'),
+        ]
     ],
-
+    'gemini' => [
+        'key' => env('GEMINI_API_KEY'),
+        'model' => env('GEMINI_MODEL', 'gemini-pro'), 
+    ],
 ];

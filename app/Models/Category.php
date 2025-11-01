@@ -2,16 +2,25 @@
 
 namespace App\Models;
 
+use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
+use Astrotomic\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Category extends Model
+class Category extends Model implements TranslatableContract
 {
-    use HasFactory;
+    use HasFactory, Translatable;
 
-    protected $fillable = ['restaurant_id'];
+    public array $translatedAttributes = ['name'];
+    // KORREKTUR: 'position' hinzugefügt
+    protected $fillable = ['restaurant_id', 'type', 'position'];
+    
+    public string $translationModel = CategoryTranslation::class;
+    public string $translationForeignKey = 'category_id';
+
+    protected string $localeKey = 'locale';
 
     public function restaurant(): BelongsTo
     {
@@ -23,11 +32,5 @@ class Category extends Model
         return $this->hasMany(Dish::class);
     }
 
-    /**
-     * Get the translations for the category.
-     */
-    public function translations(): HasMany
-    {
-        return $this->hasMany(CategoryTranslation::class);
-    }
+    // Die Beziehung translations() ist durch das Translatable Trait abgedeckt.
 }

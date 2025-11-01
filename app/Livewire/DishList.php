@@ -5,25 +5,48 @@ namespace App\Livewire;
 use App\Models\Category;
 use App\Models\Dish;
 use Illuminate\Support\Facades\Auth;
+use Livewire\Attributes\Url; // VERBESSERUNG: Notwendig für die URL-Synchronisierung
 use Livewire\Component;
 
 class DishList extends Component
 {
-    // This re-fetches the data when the component is updated
+    // VERBESSERUNG 1: Filtert die Liste nach Typ ('food' oder 'drink').
+    // #[Url] sorgt dafür, dass die Eigenschaft automatisch mit der URL synchronisiert wird.
+    // Beispiel: your-page.com/dishes?type=drink
+    #[Url(as: 'type', keep: true)]
+    public string $type = 'food';
+
     public function render()
     {
         $restaurant = Auth::user()->restaurant;
-        $categories = $restaurant ? $restaurant->categories()->with('dishes.translations')->get() : collect();
+
+        if (!$restaurant) {
+            return view('livewire.dish-list', [
+                'categories' => collect(),
+                'restaurant' => null, // VERBESSERUNG: Restaurant an die Ansicht übergeben
+            ]);
+        }
+
+        $categories = $restaurant->categories()
+            ->where('type', $this->type) // VERBESSERUNG: Filtert Kategorien nach dem Typ.
+            // KORREKTUR: Lade die Übersetzungen für die Kategorie UND für die Gerichte.
+            ->with(['translations', 'dishes.translations'])
+            ->get();
 
         return view('livewire.dish-list', [
             'categories' => $categories,
+            'restaurant' => $restaurant, // VERBESSERUNG: Restaurant an die Ansicht übergeben
         ]);
     }
 
-    // This method is called when the toggle is clicked
     public function toggleAvailability(Dish $dish)
     {
-        // Flips the boolean value and saves it to the database
+        // VERBESSERUNG 2: Sicherheits-Check!
+        // Stellt sicher, dass nur Gerichte des eigenen Restaurants geändert werden können.
+        if ($dish->category->restaurant_id !== Auth::user()->restaurant?->id) {
+            abort(403, 'Zugriff verweigert.');
+        }
+
         $dish->is_available = !$dish->is_available;
         $dish->save();
     }

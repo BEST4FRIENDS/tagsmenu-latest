@@ -46,6 +46,14 @@ use App\Http\Controllers\Superadmin\PostController as SuperadminPostController;
 
 // --- Admin Dashboard Routes (app.tagsmenu.app) ---
 Route::domain(config('app.domain_admin'))->group(function () {
+    // Root route - redirect to login or dashboard based on auth status
+    Route::get('/', function () {
+        if (auth()->check()) {
+            return redirect()->route('dashboard');
+        }
+        return redirect()->route('login');
+    });
+
     // Authentifizierungs-Routen
     require __DIR__.'/auth.php';
 

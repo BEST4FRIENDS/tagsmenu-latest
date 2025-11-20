@@ -186,5 +186,6 @@ return [
     */
     'domain_portal' => env('APP_DOMAIN_PORTAL', 'tagsmenu.app'),
     'domain_base' => env('APP_DOMAIN_BASE', 'tagsmenu.app'),
+    'domain_admin' => env('APP_DOMAIN_ADMIN', 'app.tagsmenu.app'),
 
 ];

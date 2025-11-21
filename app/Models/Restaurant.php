@@ -185,7 +185,7 @@ class Restaurant extends Model
      */
     public function getSubdomainUrlAttribute(): string
     {
-        // Holt die Basis-Domain aus der .env-Datei (z.B. tagsmenu.test)
+        // Holt die Basis-Domain aus der .env-Datei (z.B. tagsmenu.app)
         $baseDomain = config('app.domain_base');
 
         // Baut die URL zusammen. Passt das Protokoll an, falls nötig.

@@ -42,11 +42,11 @@
                      style="display: none;">
                     
                     <div class="py-1" role="none">
-                        {{-- HINWEIS: Ersetzen Sie '#' durch Ihre Sprachwechsel-Routen (z.B. route('locale.set', 'de')) --}}
-                        <a href="http://tagsmenu.test/language/de" {{-- HIER IHRE ROUTE FÜR DE --}} class="text-gray-700 dark:text-gray-200 block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-dark-base" role="menuitem" tabindex="-1">DE</a>
-                        <a href="http://tagsmenu.test/language/en" {{-- HIER IHRE ROUTE FÜR EN --}} class="text-gray-700 dark:text-gray-200 block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-dark-base" role="menuitem" tabindex="-1">EN</a>
-                        <a href="http://tagsmenu.test/language/hu" {{-- HIER IHRE ROUTE FÜR HU --}} class="text-gray-700 dark:text-gray-200 block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-dark-base" role="menuitem" tabindex="-1">HU</a>
-                        <a href="http://tagsmenu.test/language/sk" {{-- HIER IHRE ROUTE FÜR SK --}} class="text-gray-700 dark:text-gray-200 block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-dark-base" role="menuitem" tabindex="-1">SK</a>
+                        {{-- Language switcher using route helper to ensure correct domain --}}
+                        <a href="{{ route('language.switch', 'de') }}" class="text-gray-700 dark:text-gray-200 block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-dark-base" role="menuitem" tabindex="-1">DE</a>
+                        <a href="{{ route('language.switch', 'en') }}" class="text-gray-700 dark:text-gray-200 block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-dark-base" role="menuitem" tabindex="-1">EN</a>
+                        <a href="{{ route('language.switch', 'hu') }}" class="text-gray-700 dark:text-gray-200 block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-dark-base" role="menuitem" tabindex="-1">HU</a>
+                        <a href="{{ route('language.switch', 'sk') }}" class="text-gray-700 dark:text-gray-200 block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-dark-base" role="menuitem" tabindex="-1">SK</a>
                     </div>
                 </div>
             </div>

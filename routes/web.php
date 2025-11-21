@@ -46,7 +46,7 @@ use App\Http\Controllers\Superadmin\PostController as SuperadminPostController;
 
 // --- Admin Dashboard Routes (app.tagsmenu.app) ---
 Route::domain(config('app.domain_admin'))->group(function () {
-    // Root route - redirect to login or dashboard based on auth status
+    // Root route - redirect to login or dashboard
     Route::get('/', function () {
         if (auth()->check()) {
             return redirect()->route('dashboard');
@@ -102,6 +102,16 @@ Route::domain(config('app.domain_admin'))->group(function () {
     });
 });
 
+// --- Restaurant Subdomain Routes ({subdomain}.tagsmenu.app) ---
+// MUST come BEFORE public portal routes so subdomains are matched first
+// Exclude 'app' subdomain (handled by admin routes above)
+// Preferred wildcard subdomain route (e.g., https://live.tagsmenu.app)
+Route::domain('{subdomain}.' . config('app.domain_base'))
+    ->where(['subdomain' => '^(?!app$).*']) // Exclude 'app' subdomain
+    ->group(function () {
+        Route::get('/', [PublicMenuController::class, 'show'])->name('public.menu.show');
+    });
+
 // --- Public Portal Routes (tagsmenu.app) ---
 // --- 1. Spezifische öffentliche Routen ---
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -121,8 +131,9 @@ Route::post('/interact/like/{dish}', [InteractionController::class, 'likeDish'])
 Route::post('/public-ai/poetic-description/{dish}', [PublicAiController::class, 'getPoeticDescription'])->name('public.ai.poetic');
 
 
-// --- 7. Public Menu Route (Subdomain-Struktur) ---
-Route::get('/m/{subdomain}', [PublicMenuController::class, 'show'])->name('public.menu.show');
+// --- 7. Legacy Public Menu Route (path-based) ---
+// Legacy path-based route (e.g., https://tagsmenu.app/m/live)
+Route::get('/m/{subdomain}', [PublicMenuController::class, 'show'])->name('public.menu.show.legacy');
 
 
 // --- 8. DIE ALLGEMEINE CATCH-ALL ROUTE (MUSS GANZ AM ENDE STEHEN!) ---

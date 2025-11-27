@@ -6,6 +6,7 @@ use App\Models\Restaurant;
 // WICHTIG: Imports für Service und String-Helper
 use App\Services\GeocodingService;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
 
 class RestaurantObserver
 {
@@ -58,8 +59,8 @@ class RestaurantObserver
     protected function updateCoordinates(Restaurant $restaurant)
     {
         // Wir greifen direkt auf das 'address' Feld zu.
-        $address = $restaurant->address ?? ''; 
-        
+        $address = $restaurant->address ?? '';
+
         $coords = $this->geocodingService->getCoordinatesForAddress($address);
 
         if ($coords) {
@@ -70,6 +71,30 @@ class RestaurantObserver
             $restaurant->longitude = null;
         }
     }
-    
-    // Die Standard-Methoden (created, updated, deleted etc.) werden nicht benötigt und können entfernt werden.
+
+    /**
+     * Handle the Restaurant "saved" event.
+     * Wird ausgelöst, NACHDEM das Model gespeichert wurde.
+     * Wichtig: Re-index in Meilisearch nach Geo-Updates oder anderen Änderungen.
+     */
+    public function saved(Restaurant $restaurant)
+    {
+        // Re-index in Meilisearch if the restaurant should be searchable
+        // This ensures geo updates and other changes are synced to the search index
+        // Wrap in try-catch to prevent Meilisearch errors from breaking the app
+        try {
+            if ($restaurant->shouldBeSearchable()) {
+                $restaurant->searchable();
+            } else {
+                // Remove from index if it's no longer publicly listed
+                $restaurant->unsearchable();
+            }
+        } catch (\Exception $e) {
+            // Log error but don't break the save operation
+            Log::warning('Failed to sync restaurant to Meilisearch: ' . $e->getMessage(), [
+                'restaurant_id' => $restaurant->id,
+                'restaurant_name' => $restaurant->name,
+            ]);
+        }
+    }
 }
